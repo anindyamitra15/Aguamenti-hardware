@@ -3,6 +3,10 @@
  * connects the pump to Aguamenti server
  * sync pump state thru socket
  * authorize itself with HTTP
+ * WiFiManager
+ * HTTP Client
+ * Socket IO Client
+ * SPIFFS
  */
 
 #include <Arduino.h>
