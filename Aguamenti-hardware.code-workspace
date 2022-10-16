@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "pump-firmware",
+			"path": "firmwares/pump-firmware"
+		},
+		{
+			"name": "tank-firmware",
+			"path": "firmwares/tank-firmware"
+		}
+	],
+	"settings": {}
+}
