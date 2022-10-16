@@ -8,14 +8,19 @@
  * Socket IO Client
  * SPIFFS
  * ArduinoJSON
-*/
+ */
 
 #include <Arduino.h>
+#include "UltrasonicHandler.h"
 
-void setup() {
-  // put your setup code here, to run once:
+int DISTANCE = 0;
+
+void setup()
+{
+  ultrasonicHandler.begin(&DISTANCE);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop()
+{
+  ultrasonicHandler.loop();
 }
