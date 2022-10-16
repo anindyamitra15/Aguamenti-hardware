@@ -7,6 +7,7 @@
  * HTTP Client
  * Socket IO Client
  * SPIFFS
+ * ArduinoJSON
  */
 
 #include <Arduino.h>
