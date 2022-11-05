@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <Ultrasonic.h> // NewPing.h
+#include <NewPing.h>
 #include <LiquidCrystal_I2C.h>
 #include <BigNumbers_I2C.h>
 
@@ -13,6 +13,7 @@ unsigned int distance;
 
 #define TRIG 12
 #define ECHO 13
+#define MAX_DIST_CM 600
 
 #define COL 16
 #define ROW 2
@@ -21,23 +22,29 @@ unsigned int distance;
 LiquidCrystal_I2C lcd(LCD_I2C_ADDR, COL, ROW);
 BigNumbers_I2C bigNum(&lcd);
 
-Ultrasonic ultrasonic(TRIG, ECHO);
+// Ultrasonic ultrasonic(TRIG, ECHO);
+NewPing sonar(TRIG, ECHO, MAX_DIST_CM);
 
 void setup()
 {
+  Serial.begin(9600);
   lcd_setup();
 }
 
 void loop()
 {
   static bool boot = false;
+
+  // sensor read schedule
   static unsigned long last_read = 0;
-  if (!boot || millis() - last_read >= 1000)
+  if (!boot || millis() - last_read >= 50)
   {
-    distance = ultrasonic.read(CM);
+    distance = sonar.ping_cm();
+    Serial.println(distance);
     last_read = millis();
   }
 
+  // result update schedule
   static unsigned long last_disp = 0;
   if ((!boot) || millis() - last_disp >= 1000)
   {
