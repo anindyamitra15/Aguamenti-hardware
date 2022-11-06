@@ -108,12 +108,8 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
 bool socket_connect()
 {
     // socket connect
-    DynamicJsonDocument doc(512);
-    doc["token"] = token;
-    char data[512];
-    serializeJson(doc, data);
-    Serial.println(data);
-    socketIO.setExtraHeaders(data);
+    String header = "Authorization: Bearer " + token;
+    socketIO.setExtraHeaders(header.c_str());
     socketIO.begin(HOST, PORT, "/socket.io/?EIO=4");
     // socket events
     socketIO.onEvent(socketIOEvent);

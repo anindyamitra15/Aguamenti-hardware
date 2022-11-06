@@ -17,6 +17,7 @@
 void setup()
 {
   Serial.begin(115200);
+  delay(2000);
   setup_wifi();
   if (http_login())
     socket_connect();
