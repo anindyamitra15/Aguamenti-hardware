@@ -11,6 +11,7 @@
 #define PORT 3020
 #define ROUTE "/device/login/"
 #define PUMP_STATE_TOPIC "pump_state"
+#define DEVICE_SUB "to_device"
 #define USB_SERIAL Serial
 
 SocketIOclient socketIO;
@@ -35,7 +36,9 @@ bool http_login()
     }
 
     DynamicJsonDocument doc(1024);
-    deserializeJson(doc, http.getString());
+    DeserializationError error = deserializeJson(doc, http.getString());
+    if (error)
+        return false;
     token = doc["result"]["token"].as<String>();
     endpoint = doc["result"]["endpoint"].as<String>();
     Serial.println(endpoint);
@@ -59,6 +62,9 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
         break;
     case sIOtype_EVENT:
     {
+        String str = (char *)payload;
+        if (str.indexOf(DEVICE_SUB) < 0)
+            return;
         char *sptr = NULL;
         int id = strtol((char *)payload, &sptr, 10);
         USB_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
@@ -70,13 +76,11 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
         DeserializationError error = deserializeJson(doc, payload, length);
         if (error)
         {
-            USB_SERIAL.print(F("deserializeJson() failed: "));
-            USB_SERIAL.println(error.c_str());
             return;
         }
 
-        String eventName = doc[0];
-        USB_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
+        // String eventName = doc[0];
+        // USB_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
 
         // Message Includes a ID for a ACK (callback)
         if (id)

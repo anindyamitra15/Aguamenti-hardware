@@ -26,4 +26,25 @@ void setup()
 void loop()
 {
   socketIO.loop();
+  static unsigned long last_time = 0;
+  if (millis() - last_time > 2000)
+  {
+    DynamicJsonDocument docOut(1024);
+    JsonArray array = docOut.to<JsonArray>();
+
+    array.add("from_device");
+    // add payload (parameters) for the ack (callback function)
+    // JsonObject param1 = array.createNestedObject();
+    // param1["now"] = millis();
+    array.add(millis());
+
+    // JSON to String (serializion)
+    String output;
+    serializeJson(docOut, output);
+    Serial.println(output);
+
+    // Send event
+    socketIO.send(sIOtype_EVENT, output);
+    last_time = millis();
+  }
 }
