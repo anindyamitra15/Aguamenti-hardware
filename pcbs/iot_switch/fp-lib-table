@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name MODULE_ESP32_DEVKIT_V1)(type KiCad)(uri ${KIPRJMOD}/MODULE_ESP32_DEVKIT_V1)(options "")(descr ""))
+)
