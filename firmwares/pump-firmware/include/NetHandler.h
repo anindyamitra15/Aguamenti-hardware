@@ -15,6 +15,7 @@
 #define USB_SERIAL Serial
 
 SocketIOclient socketIO;
+bool isSubscribed;
 String token;
 String endpoint;
 
@@ -53,13 +54,16 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
     {
     case sIOtype_DISCONNECT:
         USB_SERIAL.printf("[IOc] Disconnected!\n");
+        // isSubscribed = false;
         break;
     case sIOtype_CONNECT:
+    {
         USB_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
 
         // join default namespace (no auto join in Socket.IO V3)
         socketIO.send(sIOtype_CONNECT, "/");
-        break;
+    }
+    break;
     case sIOtype_EVENT:
     {
         String str = (char *)payload;
@@ -119,4 +123,31 @@ bool socket_connect()
     socketIO.onEvent(socketIOEvent);
     return true;
 }
+
+void socket_subscribe()
+{
+    // subscribe to the house
+    DynamicJsonDocument doc(64);
+    JsonArray arr = doc.to<JsonArray>();
+    arr.add("subscribe");
+    JsonObject obj = arr.createNestedObject();
+    obj["ep"] = endpoint;
+    String ep;
+    serializeJson(doc, ep);
+    USB_SERIAL.print("Subscribed to: ");
+    USB_SERIAL.println(ep);
+    socketIO.send(sIOtype_EVENT, ep);
+    doc.clear();
+}
+
+void socket_loop()
+{
+    socketIO.loop();
+    if (socketIO.isConnected() && !isSubscribed)
+    {
+        socket_subscribe();
+        isSubscribed = true;
+    }
+}
+
 #endif
