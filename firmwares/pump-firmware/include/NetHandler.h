@@ -7,7 +7,7 @@
 #include <SocketIOclient.h>
 #include "Utils.h"
 
-#define HOST "192.168.245.239" // TODO: change according to yur server
+#define HOST "192.168.0.10" // TODO: change according to yur server
 #define PORT 3020
 #define ROUTE "/device/login/"
 #define PUMP_STATE_TOPIC "pump_state"

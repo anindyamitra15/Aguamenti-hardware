@@ -13,16 +13,18 @@
 #include <Arduino.h>
 #include "WiFiHandler.h"
 #include "NetHandler.h"
+#include "GPIOConfig.h"
 
 void setup()
 {
   Serial.begin(115200);
+  setup_gpio();
   delay(2000);
   setup_wifi();
   if (!http_login())
     while (1) // trigger watchdog
       ;
-  socket_connect();
+    socket_connect();
 }
 
 void loop()

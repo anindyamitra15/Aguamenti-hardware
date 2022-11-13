@@ -2,14 +2,16 @@
 #define __WiFiHandler_H__
 #include <Arduino.h>
 #include <WiFiManager.h>
+#include "Utils.h"
 
-#define AP_SSID "Aguamenti_"
+#define AP_SSID "Aguamenti_pump_"
 
 WiFiManager wifi;
 WiFiClient wifiClient;
 
 void setup_wifi()
 {
-    wifi.autoConnect(String(AP_SSID + getChipId()).c_str());
+    String ap_ssid = AP_SSID + String(getChipId());
+    wifi.autoConnect(ap_ssid.c_str());
 }
 #endif
