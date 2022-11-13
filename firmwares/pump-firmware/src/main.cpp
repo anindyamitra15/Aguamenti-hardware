@@ -19,8 +19,10 @@ void setup()
   Serial.begin(115200);
   delay(2000);
   setup_wifi();
-  if (http_login())
-    socket_connect();
+  if (!http_login())
+    while (1) // trigger watchdog
+      ;
+  socket_connect();
 }
 
 void loop()

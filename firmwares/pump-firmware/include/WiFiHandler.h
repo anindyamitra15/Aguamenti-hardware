@@ -3,13 +3,13 @@
 #include <Arduino.h>
 #include <WiFiManager.h>
 
-#define AP_SSID "Aguamenti"
+#define AP_SSID "Aguamenti_"
 
 WiFiManager wifi;
 WiFiClient wifiClient;
 
 void setup_wifi()
 {
-    wifi.autoConnect(AP_SSID);
+    wifi.autoConnect(String(AP_SSID + getChipId()).c_str());
 }
 #endif
