@@ -54,7 +54,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
     {
     case sIOtype_DISCONNECT:
         USB_SERIAL.printf("[IOc] Disconnected!\n");
-        // isSubscribed = false;
+        isSubscribed = false;
         break;
     case sIOtype_CONNECT:
     {
@@ -118,7 +118,7 @@ bool socket_connect()
     // socket connect
     String header = "Authorization: Bearer " + token;
     socketIO.setExtraHeaders(header.c_str());
-    socketIO.begin(HOST, PORT, "/socket.io/?EIO=4");
+    socketIO.begin(HOST, PORT, ("/socket.io/?EIO=4&ep=" + endpoint));
     // socket events
     socketIO.onEvent(socketIOEvent);
     return true;
@@ -143,11 +143,11 @@ void socket_subscribe()
 void socket_loop()
 {
     socketIO.loop();
-    if (socketIO.isConnected() && !isSubscribed)
-    {
-        socket_subscribe();
-        isSubscribed = true;
-    }
+    // if (socketIO.isConnected() && !isSubscribed)
+    // {
+    //     socket_subscribe();
+    //     isSubscribed = true;
+    // }
 }
 
 #endif

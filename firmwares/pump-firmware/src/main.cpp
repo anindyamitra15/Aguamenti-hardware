@@ -31,7 +31,7 @@ void loop()
 {
   socket_loop();
   static unsigned long last_time = 0;
-  if (isSubscribed && millis() - last_time > 2000)
+  if (socketIO.isConnected() && millis() - last_time > 2000)
   {
     DynamicJsonDocument docOut(1024);
     JsonArray array = docOut.to<JsonArray>();
