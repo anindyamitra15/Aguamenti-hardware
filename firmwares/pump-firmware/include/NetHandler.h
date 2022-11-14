@@ -18,6 +18,7 @@ SocketIOclient socketIO;
 bool isSubscribed;
 String token;
 String endpoint;
+void (* on_state_input_socket)(DynamicJsonDocument) = NULL;
 
 bool http_login()
 {
@@ -67,44 +68,41 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
     case sIOtype_EVENT:
     {
         String str = (char *)payload;
-        if (str.indexOf(DEVICE_SUB) < 0)
-            return;
-        char *sptr = NULL;
-        int id = strtol((char *)payload, &sptr, 10);
-        USB_SERIAL.printf("[IOc] get event: %s id: %d\n", payload, id);
-        if (id)
+        USB_SERIAL.printf("[IOc] get event: %s\n", payload);
+        if (str.indexOf(DEVICE_SUB) >= 0)
         {
-            payload = (uint8_t *)sptr;
+            DynamicJsonDocument doc(1024);
+            DeserializationError error = deserializeJson(doc, payload, length);
+            if (error)
+            {
+                return;
+            }
+            // extract data from the json
+            if(on_state_input_socket)
+                on_state_input_socket(doc);
         }
-        DynamicJsonDocument doc(1024);
-        DeserializationError error = deserializeJson(doc, payload, length);
-        if (error)
-        {
-            return;
-        }
-
         // String eventName = doc[0];
         // USB_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
 
         // Message Includes a ID for a ACK (callback)
-        if (id)
-        {
-            // creat JSON message for Socket.IO (ack)
-            DynamicJsonDocument docOut(1024);
-            JsonArray array = docOut.to<JsonArray>();
+        // if (id)
+        // {
+        //     // creat JSON message for Socket.IO (ack)
+        //     DynamicJsonDocument docOut(1024);
+        //     JsonArray array = docOut.to<JsonArray>();
 
-            // add payload (parameters) for the ack (callback function)
-            JsonObject param1 = array.createNestedObject();
-            param1["now"] = millis();
+        //     // add payload (parameters) for the ack (callback function)
+        //     JsonObject param1 = array.createNestedObject();
+        //     param1["now"] = millis();
 
-            // JSON to String (serializion)
-            String output;
-            output += id;
-            serializeJson(docOut, output);
+        //     // JSON to String (serializion)
+        //     String output;
+        //     output += id;
+        //     serializeJson(docOut, output);
 
-            // Send event
-            socketIO.send(sIOtype_ACK, output);
-        }
+        //     // Send event
+        //     socketIO.send(sIOtype_ACK, output);
+        // }
     }
     break;
     default:

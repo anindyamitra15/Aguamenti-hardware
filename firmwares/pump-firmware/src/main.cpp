@@ -15,6 +15,15 @@
 #include "NetHandler.h"
 #include "GPIOConfig.h"
 
+DynamicJsonDocument payloadJson(64);
+JsonArray socket_payload;
+JsonObject data;
+bool should_sync = false;
+
+void click_handler(Button2 &btn);
+void longpress_handler(Button2 &btn);
+void on_socket_input(DynamicJsonDocument doc);
+
 void setup()
 {
   Serial.begin(115200);
@@ -24,31 +33,56 @@ void setup()
   if (!http_login())
     while (1) // trigger watchdog
       ;
-    socket_connect();
+  socket_connect();
+  button.setClickHandler(click_handler);
+  button.setLongClickHandler(longpress_handler);
+
+  socket_payload = payloadJson.to<JsonArray>();
+  socket_payload.add("from_device");
+  data = socket_payload.createNestedObject();
+  data["chip_id"] = getChipId();
+
+  on_state_input_socket = on_socket_input;
 }
 
 void loop()
 {
   socket_loop();
-  static unsigned long last_time = 0;
-  if (socketIO.isConnected() && millis() - last_time > 2000)
+  io_loop();
+  // sync queue
+  if (should_sync)
   {
-    DynamicJsonDocument docOut(1024);
-    JsonArray array = docOut.to<JsonArray>();
-
-    array.add("from_device");
-    // add payload (parameters) for the ack (callback function)
-    // JsonObject param1 = array.createNestedObject();
-    // param1["now"] = millis();
-    array.add(millis());
-
-    // JSON to String (serializion)
+    // toggle the pump state and update the json
+    data["state"] = control_pump(!pump_state());
     String output;
-    serializeJson(docOut, output);
-    Serial.println(output);
-  docOut.clear();
-    // Send event
+    // serialise and send the data over socket
+    serializeJson(payloadJson, output);
     socketIO.send(sIOtype_EVENT, output);
-    last_time = millis();
+    Serial.print("Sending payload: ");
+    Serial.println(output);
+    should_sync = false;
   }
+}
+
+void click_handler(Button2 &btn)
+{
+  should_sync = true;
+}
+
+void longpress_handler(Button2 &btn)
+{
+  unsigned int pressTime = btn.wasPressedFor();
+
+  if (0 < pressTime && pressTime < 1000)
+  {
+    should_sync = true;
+  }
+}
+
+void on_socket_input(DynamicJsonDocument doc)
+{
+  bool state = doc[1]["state"].as<bool>();
+  Serial.print("Pump state input: ");
+  Serial.println(state);
+  control_pump(state);
 }
