@@ -124,22 +124,6 @@ bool socket_connect()
     return true;
 }
 
-void socket_subscribe()
-{
-    // subscribe to the house
-    DynamicJsonDocument doc(64);
-    JsonArray arr = doc.to<JsonArray>();
-    arr.add("subscribe");
-    JsonObject obj = arr.createNestedObject();
-    obj["ep"] = endpoint;
-    String ep;
-    serializeJson(doc, ep);
-    USB_SERIAL.print("Subscribed to: ");
-    USB_SERIAL.println(ep);
-    socketIO.send(sIOtype_EVENT, ep);
-    doc.clear();
-}
-
 void socket_loop()
 {
     socketIO.loop();
