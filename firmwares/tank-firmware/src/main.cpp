@@ -16,7 +16,7 @@
 #include "NetHandler.h"
 
 #define DEFAULT_READ_INTERVAL 80
-#define DEFAULT_UPLOAD_INTERVAL 5000
+#define DEFAULT_UPLOAD_INTERVAL 2000
 
 TaskHandle_t sync_data_task;
 TaskHandle_t sensor_read_task;
@@ -104,12 +104,13 @@ void sensor_read_function(void *pvParam)
     // detect overload and sync data as soon as overload occurs
     static bool triggered_ovf;
     static bool triggered_novf;
-    if (isOverflown())
+    if (isOverflown() ||
+        ultrasonic_reading == 0)
     {
       triggered_novf = false;
       if (!triggered_ovf)
       { // send command to stop pump
-        data["state"] = false;
+        data["pump_enable"] = false;
         should_sync = true;
         triggered_ovf = true;
       }
@@ -119,7 +120,7 @@ void sensor_read_function(void *pvParam)
       triggered_ovf = false;
       if (!triggered_novf)
       { // send command to stop pump
-        data["state"] = true;
+        data["pump_enable"] = true;
         // should_sync = true;
         triggered_novf = true;
       }

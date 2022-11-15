@@ -15,7 +15,7 @@
 #define INVERT_OVF_LOGIC false
 
 // less than the height of the tank
-int MIN_THRESHOLD_LEVEL = 70; // cm
+int MIN_THRESHOLD_LEVEL = 100;//70; // cm
 // greater than 20 cm (least distance sensor can measure)
 int MAX_THRESHOLD_LEVEL = 30; // cm
 
