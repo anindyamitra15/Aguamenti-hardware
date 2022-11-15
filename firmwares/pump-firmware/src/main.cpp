@@ -31,8 +31,11 @@ void setup()
   delay(2000);
   setup_wifi();
   if (!http_login())
+  {
+    Serial.println("Failed connecting to server");
     while (1) // trigger watchdog
       ;
+  }
   socket_connect();
   button.setClickHandler(click_handler);
   button.setLongClickHandler(longpress_handler);
