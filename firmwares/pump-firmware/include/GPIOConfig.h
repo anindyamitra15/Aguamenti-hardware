@@ -5,6 +5,7 @@
 #define LED 2
 #define PUMP 16
 #define BUTTON 17
+#define ZVD 18
 
 Button2 button;
 
