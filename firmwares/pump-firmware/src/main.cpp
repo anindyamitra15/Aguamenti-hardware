@@ -43,7 +43,7 @@ void setup()
   socket_payload = payloadJson.to<JsonArray>();
   socket_payload.add("from_device");
   data = socket_payload.createNestedObject();
-  data["chip_id"] = getChipId();
+  // data["chip_id"] = getChipId();
 
   on_state_input_socket = on_socket_input;
 }
