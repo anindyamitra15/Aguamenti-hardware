@@ -7,8 +7,8 @@
 #include <SocketIOclient.h>
 #include "Utils.h"
 
-#define HOST "aguamenti-demo.herokuapp.com" // TODO: change according to yur server
-#define PORT 80
+#define HOST "192.168.0.131" //"aguamenti-demo.herokuapp.com" // TODO: change according to yur server
+#define PORT 3020            // 80
 #define ROUTE "/device/login/"
 #define PUMP_STATE_TOPIC "pump_state"
 #define DEVICE_SUB "to_device"
@@ -18,7 +18,7 @@ SocketIOclient socketIO;
 bool isSubscribed;
 String token;
 String endpoint;
-void (* on_state_input_socket)(DynamicJsonDocument) = NULL;
+void (*on_state_input_socket)(DynamicJsonDocument) = NULL;
 
 bool http_login()
 {
@@ -78,7 +78,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
                 return;
             }
             // extract data from the json
-            if(on_state_input_socket)
+            if (on_state_input_socket)
                 on_state_input_socket(doc);
         }
         // String eventName = doc[0];
@@ -116,7 +116,7 @@ bool socket_connect()
     // socket connect
     String header = "Authorization: Bearer " + token;
     socketIO.setExtraHeaders(header.c_str());
-    socketIO.begin(HOST, PORT, ("/socket.io/?EIO=4&ep=" + endpoint));
+    socketIO.begin(HOST, PORT, ("/socket.io/?EIO=4&ep=" + endpoint + "/" + String(getChipId())));
     // socket events
     socketIO.onEvent(socketIOEvent);
     return true;

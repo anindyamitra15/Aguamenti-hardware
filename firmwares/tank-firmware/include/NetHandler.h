@@ -116,7 +116,7 @@ bool socket_connect()
     // socket connect
     String header = "Authorization: Bearer " + token;
     socketIO.setExtraHeaders(header.c_str());
-    socketIO.begin(HOST, PORT, ("/socket.io/?EIO=4&ep=" + endpoint));
+    socketIO.begin(HOST, PORT, ("/socket.io/?EIO=4&ep=" + endpoint + "/" + String(getChipId())));
     // socket events
     socketIO.onEvent(socketIOEvent);
     return true;
