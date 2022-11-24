@@ -50,7 +50,7 @@ void setup()
   socket_payload = payloadJson.to<JsonArray>();
   socket_payload.add("from_device");
   data = socket_payload.createNestedObject();
-  data["chip_id"] = getChipId();
+  // data["chip_id"] = getChipId();
 
   xTaskCreatePinnedToCore(
       sensor_read_function,
@@ -110,7 +110,7 @@ void sensor_read_function(void *pvParam)
       triggered_novf = false;
       if (!triggered_ovf)
       { // send command to stop pump
-        data["pump_enable"] = false;
+        data["state"] = false;
         should_sync = true;
         triggered_ovf = true;
       }
@@ -120,7 +120,7 @@ void sensor_read_function(void *pvParam)
       triggered_ovf = false;
       if (!triggered_novf)
       { // send command to stop pump
-        data["pump_enable"] = true;
+        data["state"] = true;
         // should_sync = true;
         triggered_novf = true;
       }

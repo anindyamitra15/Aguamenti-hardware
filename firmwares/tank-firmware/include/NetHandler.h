@@ -7,8 +7,8 @@
 #include <SocketIOclient.h>
 #include "Utils.h"
 
-#define HOST "aguamenti-demo.herokuapp.com" // TODO: change according to yur server
-#define PORT 80
+#define HOST "192.168.0.131" //"aguamenti-demo.herokuapp.com" // TODO: change according to yur server
+#define PORT 3020            // 80
 #define ROUTE "/device/login/"
 #define PUMP_STATE_TOPIC "pump_state"
 #define DEVICE_SUB "to_device"
