@@ -16,13 +16,11 @@
 #include "GPIOConfig.h"
 
 DynamicJsonDocument payloadJson(64);
-JsonArray socket_payload;
 JsonObject data;
 bool should_sync = false;
 
-void click_handler(Button2 &btn);
-void longpress_handler(Button2 &btn);
-void on_socket_input(DynamicJsonDocument doc);
+void button_event_handler(Button2 &btn);
+void on_socket_input(JsonObject doc);
 
 void setup()
 {
@@ -37,13 +35,13 @@ void setup()
       ;
   }
   socket_connect();
-  button.setClickHandler(click_handler);
-  button.setLongClickHandler(longpress_handler);
+  button.setClickHandler(button_event_handler);
+  button.setLongClickHandler(button_event_handler);
 
+  JsonArray socket_payload;
   socket_payload = payloadJson.to<JsonArray>();
   socket_payload.add("from_device");
   data = socket_payload.createNestedObject();
-  // data["chip_id"] = getChipId();
 
   on_state_input_socket = on_socket_input;
 }
@@ -56,7 +54,6 @@ void loop()
   if (should_sync)
   {
     // toggle the pump state and update the json
-    data["state"] = control_pump(!pump_state());
     String output;
     // serialise and send the data over socket
     serializeJson(payloadJson, output);
@@ -67,25 +64,33 @@ void loop()
   }
 }
 
-void click_handler(Button2 &btn)
+void button_event_handler(Button2 &btn)
 {
-  should_sync = true;
-}
-
-void longpress_handler(Button2 &btn)
-{
-  unsigned int pressTime = btn.wasPressedFor();
-
-  if (0 < pressTime && pressTime < 1000)
+  bool triggered = false;
+  switch (btn.getType())
   {
+  case single_click:
+    triggered = true;
+    break;
+  case long_click:
+    unsigned int pressTime = btn.wasPressedFor();
+    if (0 < pressTime && pressTime < 1000)
+      triggered = true;
+    break;
+  default:
+    break;
+  }
+
+  if (triggered)
+  {
+    data["state"] = control_pump(!pump_state());
     should_sync = true;
   }
 }
 
-void on_socket_input(DynamicJsonDocument doc)
+void on_socket_input(JsonObject doc)
 {
-  bool state = doc[1]["state"].as<bool>();
+  bool state = doc["state"].as<bool>();
   Serial.print("Pump state input: ");
-  Serial.println(state);
-  control_pump(state);
+  Serial.println(control_pump(state));
 }
