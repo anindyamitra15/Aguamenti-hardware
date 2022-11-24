@@ -73,10 +73,12 @@ void button_event_handler(Button2 &btn)
     triggered = true;
     break;
   case long_click:
+  {
     unsigned int pressTime = btn.wasPressedFor();
     if (0 < pressTime && pressTime < 1000)
       triggered = true;
-    break;
+  }
+  break;
   default:
     break;
   }
