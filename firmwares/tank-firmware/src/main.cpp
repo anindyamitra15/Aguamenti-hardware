@@ -30,7 +30,6 @@ unsigned int upload_interval = DEFAULT_UPLOAD_INTERVAL; // ms
 
 bool should_sync;
 DynamicJsonDocument payloadJson(128);
-JsonArray socket_payload;
 JsonObject data;
 
 void setup()
@@ -46,11 +45,10 @@ void setup()
       ;
   }
   socket_connect();
-
+  JsonArray socket_payload;
   socket_payload = payloadJson.to<JsonArray>();
   socket_payload.add("from_device");
   data = socket_payload.createNestedObject();
-  // data["chip_id"] = getChipId();
 
   xTaskCreatePinnedToCore(
       sensor_read_function,
