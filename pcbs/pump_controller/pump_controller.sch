@@ -322,9 +322,9 @@ $EndComp
 Wire Wire Line
 	6350 2900 6350 3050
 Connection ~ 6350 3050
-Text GLabel 7150 4650 0    50   Input ~ 0
-ZVD
 Text GLabel 8750 3650 2    50   Input ~ 0
+ZVD
+Text GLabel 7150 4650 0    50   Input ~ 0
 Drive
 Wire Wire Line
 	9600 3750 9600 3850
@@ -435,9 +435,9 @@ Wire Wire Line
 Text GLabel 4550 4950 2    50   Input ~ 0
 ZVD
 Wire Wire Line
-	8550 3650 8750 3650
+	7350 4650 7150 4650
 Wire Wire Line
-	7150 4650 7350 4650
+	8750 3650 8550 3650
 Wire Wire Line
 	8550 3750 9100 3750
 NoConn ~ 8550 3950

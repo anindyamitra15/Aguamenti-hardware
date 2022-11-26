@@ -4,9 +4,9 @@
 #include <Button2.h>
 
 #define LED 2
-#define PUMP 16
+#define PUMP 18
 #define BUTTON 17
-#define ZVD 18
+#define ZVD 16
 
 Button2 button;
 

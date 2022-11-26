@@ -371,7 +371,6 @@ Wire Wire Line
 	1750 2700 1900 2700
 NoConn ~ 4550 5250
 NoConn ~ 4550 5350
-NoConn ~ 4550 6050
 $Comp
 L Transistor_BJT:BC547 Q2
 U 1 1 637A5DA1
@@ -639,10 +638,10 @@ ZVD
 Wire Wire Line
 	3600 3750 3750 3750
 Connection ~ 3600 3750
-Text GLabel 3150 6550 0    50   Input ~ 0
+Text GLabel 4750 6250 2    50   Input ~ 0
 ZVD
 Wire Wire Line
-	3150 6550 3350 6550
+	4750 6250 4550 6250
 Wire Wire Line
 	5050 5550 5050 5350
 Wire Wire Line
@@ -671,4 +670,9 @@ Wire Wire Line
 	4550 5550 5050 5550
 Wire Wire Line
 	4550 5650 5050 5650
+NoConn ~ 4550 6150
+NoConn ~ 4550 6050
+NoConn ~ 4550 5950
+NoConn ~ 4550 5850
+NoConn ~ 3350 6550
 $EndSCHEMATC

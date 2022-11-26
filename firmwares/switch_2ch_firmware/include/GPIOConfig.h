@@ -6,7 +6,7 @@
 #define LED 2
 #define OUT_1 21       // D21
 #define OUT_2 19       // D19
-#define ZVD 23         // D18
+#define ZVD 25         // D25
 #define SWITCH_IN_2 17 // Tx2
 #define SWITCH_IN_1 16 // Rx2
 #define NUM_KEYS 2
