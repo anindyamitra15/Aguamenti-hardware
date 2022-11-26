@@ -21,7 +21,7 @@ enum device_type // shouldn't have a -ve value
 
 // signature for 2 channel board: one slider, one toggle
 uint8_t const keys[NUM_KEYS][3] = {
-    {OUT_1, SWITCH_IN_1, SLIDER},
+    {OUT_1, SWITCH_IN_1, SWITCH},
     {OUT_2, SWITCH_IN_2, SWITCH},
 };
 
@@ -40,10 +40,13 @@ void setup_gpio()
     for (int i = 0; i < NUM_KEYS; i++)
     {
         button[i].begin(keys[i][1], INPUT_PULLUP);
+        Serial.println(keys[i][1]);
         if (button_handler != NULL)
         {
             button[i].setClickHandler(button_handler);
             button[i].setLongClickHandler(button_handler);
+            Serial.print(i);
+            Serial.println(" button binded");
         }
     }
     pinMode(ZVD, INPUT);

@@ -7,18 +7,20 @@
 #include <SocketIOclient.h>
 #include "Utils.h"
 
-#define HOST "192.168.0.131" //"aguamenti-demo.herokuapp.com" // TODO: change according to yur server
-#define PORT 3020            // 80
+// #define HOST "192.168.0.131"
+// #define PORT 3020
+#define HOST "aguamenti-demo.herokuapp.com" // TODO: change according to yur server
+#define PORT 80
 #define ROUTE "/device/login/"
 #define DEVICE_SUB "to_device"
-#define DEVICE_SYNC "device_sync
+#define DEVICE_SYNC "device_sync"
 #define USB_SERIAL Serial
 
 SocketIOclient socketIO;
 bool isSubscribed;
 String token;
 String endpoint;
-void (*on_state_input_socket)(DynamicJsonDocument) = NULL;
+void (*on_state_input_socket)(JsonObject) = NULL;
 
 bool http_login()
 {
@@ -79,7 +81,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
         }
         // extract data from the json
         if (on_state_input_socket)
-            on_state_input_socket(doc);
+            on_state_input_socket(doc[1]);
         // String eventName = doc[0];
         // USB_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
 

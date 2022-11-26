@@ -10,10 +10,12 @@ bool should_sync = false;
 void on_socket_input(JsonObject doc);
 
 void button_handle(Button2 &btn);
+void set_state(uint8_t const *handle, uint8_t *data_info, bool state, int value);
 
 void setup()
 {
   Serial.begin(115200);
+  button_handler = button_handle; 
   setup_gpio();
   delay(2000);
   setup_wifi();
@@ -27,6 +29,7 @@ void setup()
   JsonArray socket_payload = payloadJson.to<JsonArray>();
   socket_payload.add("from_device");
   data = socket_payload.createNestedObject();
+  on_state_input_socket = on_socket_input;
 }
 
 void loop()
@@ -57,11 +60,11 @@ void on_socket_input(JsonObject doc)
   {
     key = doc["key"];
   }
-  if (doc["state"] != NULL)
-  {
-    state = doc["state"];
-    data_info |= 0x01;
-  }
+  // if (doc["state"] != NULL)
+  // {
+  state = doc["state"];
+  data_info |= 0x01;
+  // }
   if (doc["value"] != NULL)
   {
     value = doc["value"];
@@ -71,27 +74,28 @@ void on_socket_input(JsonObject doc)
   set_state(keys[key], &data_info, state, value);
 }
 
-void set_state(uint8_t const *handle, uint8_t *data_info, bool state, int value)
+void set_state(uint8_t const handle[3], uint8_t *data_info, bool state, int value)
 {
   switch (handle[2])
   {
   case SWITCH:
   case PUMP:
   {
-    switch (*data_info)
-    {
-    case 0x01: // only state
-      digitalWrite(handle[0], state);
-      break;
-    case 0x02: // only value
-      digitalWrite(handle[0], value);
-      break;
-    case 0x03: // both state and value
-      digitalWrite(handle[0], state & value);
-      break;
-    default:
-      break;
-    }
+    digitalWrite(handle[0], state);
+    // switch (*data_info)
+    // {
+    // case 0x01: // only state
+    //   digitalWrite(handle[0], state);
+    //   break;
+    // case 0x02: // only value
+    //   digitalWrite(handle[0], value);
+    //   break;
+    // case 0x03: // both state and value
+    //   digitalWrite(handle[0], state & value);
+    //   break;
+    // default:
+    //   break;
+    // }
   }
   break;
 
@@ -122,6 +126,7 @@ void set_state(uint8_t const *handle, uint8_t *data_info, bool state, int value)
 
 void button_handle(Button2 &btn)
 {
+  Serial.println("Button activity");
   bool triggered;
   switch (btn.getType())
   {
@@ -129,11 +134,13 @@ void button_handle(Button2 &btn)
     triggered = true;
     break;
   case long_click:
+  {
     unsigned int pressTime = btn.wasPressedFor();
 
     if (0 < pressTime && pressTime < 1000)
       bool triggered = true;
-    break;
+  }
+  break;
   default:
     break;
   }
@@ -143,6 +150,8 @@ void button_handle(Button2 &btn)
     for (int i = 0; i < NUM_KEYS; i++)
       if (btn == button[i])
       {
+        Serial.print("From button");
+        Serial.println(i);
         uint8_t data_info = 0x01;
         set_state(
             keys[i],
@@ -152,6 +161,7 @@ void button_handle(Button2 &btn)
         // push the state to socket as well
         data["key"] = i;
         data["state"] = digitalRead(keys[i][0]);
+        should_sync = true;
       }
   }
 }
