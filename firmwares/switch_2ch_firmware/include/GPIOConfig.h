@@ -40,13 +40,10 @@ void setup_gpio()
     for (int i = 0; i < NUM_KEYS; i++)
     {
         button[i].begin(keys[i][1], INPUT_PULLUP);
-        Serial.println(keys[i][1]);
         if (button_handler != NULL)
         {
             button[i].setClickHandler(button_handler);
             button[i].setLongClickHandler(button_handler);
-            Serial.print(i);
-            Serial.println(" button binded");
         }
     }
     pinMode(ZVD, INPUT);

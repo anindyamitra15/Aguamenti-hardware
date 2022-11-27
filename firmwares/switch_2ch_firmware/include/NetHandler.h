@@ -82,28 +82,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t *payload, size_t length)
         // extract data from the json
         if (on_state_input_socket)
             on_state_input_socket(doc[1]);
-        // String eventName = doc[0];
-        // USB_SERIAL.printf("[IOc] event name: %s\n", eventName.c_str());
 
-        // Message Includes a ID for a ACK (callback)
-        // if (id)
-        // {
-        //     // creat JSON message for Socket.IO (ack)
-        //     DynamicJsonDocument docOut(1024);
-        //     JsonArray array = docOut.to<JsonArray>();
-
-        //     // add payload (parameters) for the ack (callback function)
-        //     JsonObject param1 = array.createNestedObject();
-        //     param1["now"] = millis();
-
-        //     // JSON to String (serializion)
-        //     String output;
-        //     output += id;
-        //     serializeJson(docOut, output);
-
-        //     // Send event
-        //     socketIO.send(sIOtype_ACK, output);
-        // }
     }
     break;
     default:
@@ -126,11 +105,6 @@ bool socket_connect()
 void socket_loop()
 {
     socketIO.loop();
-    // if (socketIO.isConnected() && !isSubscribed)
-    // {
-    //     socket_subscribe();
-    //     isSubscribed = true;
-    // }
 }
 
 #endif
