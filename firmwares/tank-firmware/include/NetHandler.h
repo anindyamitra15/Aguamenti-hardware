@@ -7,10 +7,10 @@
 #include <SocketIOclient.h>
 #include "Utils.h"
 
-// #define HOST "192.168.0.131" //"aguamenti-demo.herokuapp.com" // TODO: change according to yur server
 // #define PORT 3020            // 80
-#define HOST "aguamenti-demo.herokuapp.com" // TODO: change according to yur server
-#define PORT 80
+// #define HOST "192.168.0.131" //"aguamenti-demo.herokuapp.com" // TODO: change according to yur server
+#define HOST "192.168.0.19" // TODO: change according to yur server
+#define PORT 3020
 #define ROUTE "/device/login/"
 #define DEVICE_SUB "to_device"
 #define DEVICE_SYNC "device_sync"
@@ -27,6 +27,7 @@ bool http_login()
     // http login
     HTTPClient http;
     String url = "http://" + String(HOST) + ":" + String(PORT) + String(ROUTE) + String(getChipId());
+    // String url = "http://" + String(HOST) + String(ROUTE) + String(getChipId());
     USB_SERIAL.println(url);
     if (!http.begin(url))
         return false;

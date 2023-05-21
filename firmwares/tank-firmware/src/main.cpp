@@ -24,7 +24,8 @@ TaskHandle_t sensor_read_task;
 void sensor_read_function(void *);
 void sync_data_function(void *);
 
-int ultrasonic_reading;                                 // cm
+// int ultrasonic_reading;                                 // cm
+int cap_sensor_reading;                                 // %
 unsigned int read_interval = DEFAULT_READ_INTERVAL;     // ms
 unsigned int upload_interval = DEFAULT_UPLOAD_INTERVAL; // ms
 
@@ -84,48 +85,20 @@ void sensor_read_function(void *pvParam)
   {
     // TODO: read data from ultrasonic and average
     // and store it to "(int)ultrasonic_reading"
-    read_ultrasonic(&ultrasonic_reading);
+    // read_ultrasonic(&ultrasonic_reading);
+    read_capacitive(&cap_sensor_reading);
+    data["value"] = cap_sensor_reading;
     // if reading near 0 or 100, update "upload_interval" and "read_interval"
     // static bool adjusted;
-    if (ultrasonic_reading >= MIN_THRESHOLD_LEVEL ||
-        ultrasonic_reading <= MAX_THRESHOLD_LEVEL)
-    {
-      // read_interval = 10;
-      upload_interval = 500;
-    }
-    else
-    {
 
-      read_interval = DEFAULT_READ_INTERVAL;
-      upload_interval = DEFAULT_UPLOAD_INTERVAL;
+    if(cap_sensor_reading >= 90){
+      data["state"] = false;
     }
-    // detect overload and sync data as soon as overload occurs
-    static bool triggered_ovf;
-    static bool triggered_novf;
-    if (isOverflown() ||
-        ultrasonic_reading == 0)
-    {
-      triggered_novf = false;
-      if (!triggered_ovf)
-      { // send command to stop pump
-        data["state"] = false;
-        should_sync = true;
-        triggered_ovf = true;
-      }
-    }
-    else
-    {
-      triggered_ovf = false;
-      if (!triggered_novf)
-      { // send command to stop pump
-        data["state"] = true;
-        // should_sync = true;
-        triggered_novf = true;
-      }
+    if(cap_sensor_reading <= 10){
+      data["state"] = true;
     }
 
     // prepare the upload packet
-    data["value"] = ultrasonic_reading;
     vTaskDelay(read_interval / portTICK_RATE_MS);
   }
 }
