@@ -33,7 +33,7 @@ L Connector:Conn_01x04_Female J2
 U 1 1 6374B7FE
 P 4750 5400
 F 0 "J2" H 4778 5376 50  0000 L CNN
-F 1 "Ultrasonic sensor" H 4778 5285 50  0000 L CNN
+F 1 "Capacitor sensor" H 4778 5285 50  0000 L CNN
 F 2 "Connector_PinSocket_1.27mm:PinSocket_1x04_P1.27mm_Vertical" H 4750 5400 50  0001 C CNN
 F 3 "~" H 4750 5400 50  0001 C CNN
 	1    4750 5400

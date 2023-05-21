@@ -8,6 +8,10 @@
 			"path": "firmwares/pump-firmware"
 		},
 		{
+			"name": "switch_2ch_firmware",
+			"path": "firmwares/switch_2ch_firmware"
+		},
+		{
 			"name": "tank-firmware",
 			"path": "firmwares/tank-firmware"
 		}
