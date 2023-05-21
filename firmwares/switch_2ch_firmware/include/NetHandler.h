@@ -8,9 +8,11 @@
 #include "Utils.h"
 
 // #define HOST "192.168.0.131"
+// #define PORT 80
 // #define PORT 3020
-#define HOST "aguamenti-demo.herokuapp.com" // TODO: change according to yur server
-#define PORT 80
+// #define HOST "http://aguamenti-backend-production.up.railway.app" // TODO: change according to yur server
+#define HOST "192.168.0.19" // TODO: change according to yur server
+#define PORT 3020
 #define ROUTE "/device/login/"
 #define DEVICE_SUB "to_device"
 #define DEVICE_SYNC "device_sync"
